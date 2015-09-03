@@ -13,7 +13,8 @@
     weekTemplate: $('#week-template').html(),
     
     renderWeek: function (w, pre) {
-      var day = moment().day(0).week(w), //first day of week
+      log('rendering', w);
+      var day = moment().week(w).day(0), //first day of week
           ix = 0,
           days = [],
           self = this,
@@ -34,12 +35,13 @@
       });
       
       if ((days[0].month() !== days[6].month()) || (days[0].date() === 1)) {
-        html += '<div class="month">' + days[6].format('MMMM YYYY') + '</div>';
+        html += '<div class="month" data-month="' + days[0].month() + '">' + days[6].format('MMMM YYYY') + '</div>';
       }
       html += Mustache.render(self.weekTemplate, {
         Days: renderDays,
         Week: w
       });
+
       scrollSave = self.$el.scrollTop();
       if (pre) {
         self.$el.prepend(html);
@@ -51,9 +53,14 @@
     }, 
 
     renderInitial: function () {
+      if (this.hasBeenRendered) {
+        throw 'Trying to renderInitial twice';
+      }
+      this.hasBeenRendered = true;
       var firstWeekOfMonth = this.firstDayOfMonth.week(),
-          firstWeek = firstWeekOfMonth - 1,
-          weekRange = 6,
+          firstMonth = this.firstDayOfMonth.month(),
+          firstWeek = firstWeekOfMonth - 5,
+          weekRange = 16,
           lastWeek = firstWeek + weekRange,
           self = this,
           monthEl,
@@ -62,32 +69,36 @@
         this.renderWeek(i);
       }
       //var el = this.$container.find('[data-week="' + firstWeekOfMonth + '"]');
-      monthEl = this.$('.month:first');
+      monthEl = this.$('.month[data-month="' + firstMonth +'"]');
       weekEl = this.$('.week:first');
       self.weekHeight = weekEl.height();
       self.firstWeek = firstWeek;
-      console.log(monthEl.position().top, monthEl);
+      self.lastWeek = firstWeek + weekRange;
       this.$el.scrollTop(parseInt(monthEl.position().top, 10));
     },
     
     onScroll: function () {
       var scroll = this.$el.scrollTop(),
-          self = this;
-      if (scroll < this.weekHeight) {
+          self = this,
+          thresh = (this.weekHeight * 5);
+
+      if (scroll < thresh) {
         self.firstWeek -= 1;
         self.renderWeek(self.firstWeek, true);
       }
-      console.log(this.$el.scrollTop(), this.weekHeight);
-    
+      else if ((scroll + self.$el.height()) > (self.$el[0].scrollHeight - thresh)) {
+        self.lastWeek += 1;
+        self.renderWeek(self.lastWeek);
+      }
     },
     
     initialize: function (o) {
       this.currentDay = moment();
       this.firstDayOfMonth = this.currentDay.clone().date(1);
       this.week = this.currentDay.clone().week();
-      //this.render();
+
       this.renderInitial();
-      this.$el.on('scroll', _.throttle(_.bind(this.onScroll, this), 100));
+      this.$el.on('scroll', _.throttle(_.bind(this.onScroll, this), 25));
     }
     
   });
