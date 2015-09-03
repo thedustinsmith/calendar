@@ -1,0 +1,36 @@
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+
+#calendar {
+  overflow-y:auto;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.week {
+  overflow: auto;
+}
+
+.month {
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  text-align: center;
+}
+.day {
+  width: 14.26%;
+  float: left;
+  height: 22vh;
+  border-left: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+}
+.day:last-child {
+  border-right: 1px solid #aaa;
+}
+.day-num {
+  color: rgba(100, 100, 100, 0.2);
+}
