@@ -11,6 +11,10 @@ var users = require('./routes/users');
 
 var app = express();
 
+swig.setDefaults({
+  varControls: ['{=', '=}']
+});
+
 // view engine setup
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
