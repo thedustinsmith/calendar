@@ -33,8 +33,8 @@
         };
       });
       
-      if (days[0].month() !== days[6].month()) {
-        html += '<div class="month">' + days[6].format('MMMM') + '</div>';
+      if ((days[0].month() !== days[6].month()) || (days[0].date() === 1)) {
+        html += '<div class="month">' + days[6].format('MMMM YYYY') + '</div>';
       }
       html += Mustache.render(self.weekTemplate, {
         Days: renderDays,
