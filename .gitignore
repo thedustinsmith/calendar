@@ -3,3 +3,11 @@ npm-debug.log
 bower_components
 
 secrets.json
+.ntvs_analysis.dat
+.vs/calendar/v14/.suo
+.vs/config/applicationhost.config
+bin/Microsoft.NodejsTools.WebRole.dll
+calendar.njsproj
+obj/Debug/calendar.njsprojResolveAssemblyReference.cache
+obj/Debug/calendar.njsproj.FileListAbsolute.txt
+calendar.sln
