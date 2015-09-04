@@ -33,8 +33,6 @@ passport.use(new FacebookStrategy({
   }
 ));
 
-console.log(secrets);
-
 passport.use(new GoogleStrategy({
     clientID: secrets.googleClientId,
     clientSecret: secrets.googleSecret,
