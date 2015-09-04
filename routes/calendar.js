@@ -3,9 +3,14 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('calendar/index', { 
-  	title: 'Calendar'
-  });
+	if (!req.user) {
+		res.redirect('/');
+		return;
+	}
+	res.render('calendar/index', { 
+		title: 'Calendar',
+		userId: req.user.id
+	});
 });
 
 module.exports = router;

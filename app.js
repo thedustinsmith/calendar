@@ -4,7 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var exprSession = require('express-session');
 var swig = require('swig');
+var passport = require('passport');
+var passportConfig = require('./utilities/passport-config');
 var app = express();
 
 swig.setDefaults({
@@ -26,10 +29,18 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(exprSession({ 
+  secret: 'keyboard cat',
+  saveUninitialized: false,
+  resave: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/calendar', require('./routes/calendar'));
+app.use('/auth', require('./routes/auth'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

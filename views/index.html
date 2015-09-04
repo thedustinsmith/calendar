@@ -13,7 +13,10 @@
 
 {% block content %}
 <p>This is just an awesome page.
-
+<br />
 TestValue: {= test =}
 </p>
+
+<form method="post" action="/auth/facebook"><button type="submit">Sign in with Facebook</button></form>
+<form method="post" action="/auth/google"><button type="submit">Sign in with Google</button></form>
 {% endblock %}
