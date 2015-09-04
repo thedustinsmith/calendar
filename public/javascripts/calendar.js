@@ -53,10 +53,6 @@
     }, 
 
     renderInitial: function () {
-      if (this.hasBeenRendered) {
-        throw 'Trying to renderInitial twice';
-      }
-      this.hasBeenRendered = true;
       var firstWeekOfMonth = this.firstDayOfMonth.week(),
           firstMonth = this.firstDayOfMonth.month(),
           firstWeek = firstWeekOfMonth - 5,
@@ -65,22 +61,30 @@
           self = this,
           monthEl,
           weekEl;
-      for (var i = firstWeek; i < lastWeek; i++) {
-        this.renderWeek(i);
+
+      if (self.hasBeenRendered) {
+        throw 'Trying to renderInitial twice';
       }
-      //var el = this.$container.find('[data-week="' + firstWeekOfMonth + '"]');
-      monthEl = this.$('.month[data-month="' + firstMonth +'"]');
-      weekEl = this.$('.week:first');
+      self.hasBeenRendered = true;
+
+      for (var i = firstWeek; i < lastWeek; i++) {
+        self.renderWeek(i);
+      }
+
+      monthEl = self.$('.month[data-month="' + firstMonth + '"]');
+      weekEl = self.$('.week:first');
       self.weekHeight = weekEl.height();
       self.firstWeek = firstWeek;
       self.lastWeek = firstWeek + weekRange;
-      this.$el.scrollTop(parseInt(monthEl.position().top, 10));
+      self.$el.scrollTop(parseInt(monthEl.position().top, 10));
     },
     
     onScroll: function () {
       var scroll = this.$el.scrollTop(),
           self = this,
           thresh = (this.weekHeight * 5);
+
+      
 
       if (scroll < thresh) {
         self.firstWeek -= 1;
