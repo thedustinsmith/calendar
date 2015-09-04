@@ -84,7 +84,10 @@
                 self = this,
                 thresh = (this.weekHeight * 5);
             
-            
+            //Idea for infinite scroll up
+            if (scroll === 0) {
+                scroll = this.$el.scrollTop(100);
+            }
             
             if (scroll < thresh) {
                 self.firstWeek -= 1;
