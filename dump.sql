@@ -13,7 +13,7 @@ SET client_min_messages = warning;
 -- Name: postgres; Type: COMMENT; Schema: -; Owner: postgres
 --
 
-COMMENT ON DATABASE postgres IS 'default administrative connection database';
+COMMENT ON DATABASE calendar IS 'default administrative connection database';
 
 
 --
@@ -61,7 +61,7 @@ CREATE TABLE "Event" (
 );
 
 
-ALTER TABLE "Event" OWNER TO postgres;
+ALTER TABLE "Event" OWNER TO calendar;
 
 --
 -- Name: Event_EventID_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -75,7 +75,7 @@ CREATE SEQUENCE "Event_EventID_seq"
     CACHE 1;
 
 
-ALTER TABLE "Event_EventID_seq" OWNER TO postgres;
+ALTER TABLE "Event_EventID_seq" OWNER TO calendar;
 
 --
 -- Name: Event_EventID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -95,7 +95,7 @@ CREATE TABLE "Group_User_Rel" (
 );
 
 
-ALTER TABLE "Group_User_Rel" OWNER TO postgres;
+ALTER TABLE "Group_User_Rel" OWNER TO calendar;
 
 --
 -- Name: Group_User_Rel_RelationshipID_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -109,7 +109,7 @@ CREATE SEQUENCE "Group_User_Rel_RelationshipID_seq"
     CACHE 1;
 
 
-ALTER TABLE "Group_User_Rel_RelationshipID_seq" OWNER TO postgres;
+ALTER TABLE "Group_User_Rel_RelationshipID_seq" OWNER TO calendar;
 
 --
 -- Name: Group_User_Rel_RelationshipID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -129,7 +129,7 @@ CREATE TABLE "Groups" (
 );
 
 
-ALTER TABLE "Groups" OWNER TO postgres;
+ALTER TABLE "Groups" OWNER TO calendar;
 
 --
 -- Name: Groups_GroupID_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -143,7 +143,7 @@ CREATE SEQUENCE "Groups_GroupID_seq"
     CACHE 1;
 
 
-ALTER TABLE "Groups_GroupID_seq" OWNER TO postgres;
+ALTER TABLE "Groups_GroupID_seq" OWNER TO calendar;
 
 --
 -- Name: Groups_GroupID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -163,7 +163,7 @@ CREATE TABLE "Organization_Invitations" (
 );
 
 
-ALTER TABLE "Organization_Invitations" OWNER TO postgres;
+ALTER TABLE "Organization_Invitations" OWNER TO calendar;
 
 --
 -- Name: Org_Invitations_InvitationID_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -177,7 +177,7 @@ CREATE SEQUENCE "Org_Invitations_InvitationID_seq"
     CACHE 1;
 
 
-ALTER TABLE "Org_Invitations_InvitationID_seq" OWNER TO postgres;
+ALTER TABLE "Org_Invitations_InvitationID_seq" OWNER TO calendar;
 
 --
 -- Name: Org_Invitations_InvitationID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -196,7 +196,7 @@ CREATE TABLE "Organizations" (
 );
 
 
-ALTER TABLE "Organizations" OWNER TO postgres;
+ALTER TABLE "Organizations" OWNER TO calendar;
 
 --
 -- Name: Organization_OrgID_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -210,7 +210,7 @@ CREATE SEQUENCE "Organization_OrgID_seq"
     CACHE 1;
 
 
-ALTER TABLE "Organization_OrgID_seq" OWNER TO postgres;
+ALTER TABLE "Organization_OrgID_seq" OWNER TO calendar;
 
 --
 -- Name: Organization_OrgID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -231,7 +231,7 @@ CREATE TABLE "Organization_User_Rel" (
 );
 
 
-ALTER TABLE "Organization_User_Rel" OWNER TO postgres;
+ALTER TABLE "Organization_User_Rel" OWNER TO calendar;
 
 --
 -- Name: Organization_User_Rel_RelationshipID_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -245,7 +245,7 @@ CREATE SEQUENCE "Organization_User_Rel_RelationshipID_seq"
     CACHE 1;
 
 
-ALTER TABLE "Organization_User_Rel_RelationshipID_seq" OWNER TO postgres;
+ALTER TABLE "Organization_User_Rel_RelationshipID_seq" OWNER TO calendar;
 
 --
 -- Name: Organization_User_Rel_RelationshipID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -259,14 +259,27 @@ ALTER SEQUENCE "Organization_User_Rel_RelationshipID_seq" OWNED BY "Organization
 --
 
 CREATE TABLE "Users" (
-    "UserID" smallint NOT NULL,
+    "UserID" integer NOT NULL,
     "FirstName" text NOT NULL,
     "LastName" text NOT NULL,
-    "Email" text NOT NULL
+    "Email" text NOT NULL,
+    "ProviderHash" text NULL
 );
 
 
-ALTER TABLE "Users" OWNER TO postgres;
+ALTER TABLE "Users" OWNER TO calendar;
+
+CREATE SEQUENCE "UserID_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "UserID_seq" OWNER TO calendar;
+
+ALTER SEQUENCE "UserID_seq" OWNED BY "Users"."UserID";
 
 --
 -- Name: EventID; Type: DEFAULT; Schema: public; Owner: postgres
@@ -436,8 +449,10 @@ ALTER TABLE ONLY "Organization_User_Rel"
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
+REVOKE ALL ON SCHEMA public FROM calendar;
 GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
+GRANT ALL ON SCHEMA public TO calendar;
+--GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --

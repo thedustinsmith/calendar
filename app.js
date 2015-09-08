@@ -37,6 +37,7 @@ app.use(exprSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/calendar', require('./routes/calendar'));

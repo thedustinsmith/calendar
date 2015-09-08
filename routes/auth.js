@@ -9,7 +9,8 @@ router.get('/facebook/callback', passport.authenticate('facebook', {
 }));
 
 router.post('/google', passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }));
-router.get('/google/callback',
-  passport.authenticate('google', { successRedirect: '/calendar',
-                                    failureRedirect: '/login?failed=true' }));
+router.get('/google/callback', passport.authenticate('google', { 
+	successRedirect: '/calendar',
+	failureRedirect: '/login?failed=true' 
+}));
 module.exports = router;
