@@ -322,6 +322,8 @@ ALTER TABLE ONLY "Organization_User_Rel" ALTER COLUMN "RelationshipID" SET DEFAU
 
 ALTER TABLE ONLY "Organizations" ALTER COLUMN "OrgID" SET DEFAULT nextval('"Organization_OrgID_seq"'::regclass);
 
+ALTER TABLE ONLY "Users" ALTER COLUMN "UserID" SET DEFAULT nextval('"UserID_seq"'::regclass);
+
 
 --
 -- Name: Event_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 

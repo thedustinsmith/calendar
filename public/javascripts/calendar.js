@@ -1,12 +1,3 @@
-// (function (global) {
-//   global.monthModel = Backbone.Model.extend({
-//     initialize: function (o) {
-//       this.set('month', o.month);
-//       this.set('year', o.year);
-//     }
-//   });
-// })(app.models);
-
 (function (global) {
     var monthView = Backbone.View.extend({
         template: $('#month-template').html(),
@@ -55,8 +46,8 @@
         renderInitial: function () {
             var firstWeekOfMonth = this.firstDayOfMonth.week(),
                 firstMonth = this.firstDayOfMonth.month(),
-                firstWeek = firstWeekOfMonth - 5,
-                weekRange = 16,
+                firstWeek = firstWeekOfMonth - 2,
+                weekRange = 10,
                 lastWeek = firstWeek + weekRange,
                 self = this,
                 monthEl,
@@ -82,12 +73,7 @@
         onScroll: function () {
             var scroll = this.$el.scrollTop(),
                 self = this,
-                thresh = (this.weekHeight * 5);
-            
-            //Idea for infinite scroll up
-            if (scroll === 0) {
-                scroll = this.$el.scrollTop(100);
-            }
+                thresh = (this.weekHeight * 2);
             
             if (scroll < thresh) {
                 self.firstWeek -= 1;
@@ -114,8 +100,125 @@
 })(app);
 
 (function (global) {
+	var WEEK_RANGE = 8;
+	var monthView = Backbone.View.extend({
+
+        template: $('#month-template').html(),
+        weekTemplate: $('#week-template').html(),
+        
+		events: {
+			'scroll': 'throttledScroll'
+		},
+
+		throttledScroll: _.throttle(function (ev) {
+			var self = this,
+				scroll = self.$el.scrollTop(),
+                thresh = (self.weekHeight * 2),
+                elHeight = self.$el.height(),
+                elScrollHeight = self.$el[0].scrollHeight,
+                delta = self.oldScroll - scroll,
+                isDown = delta < 0;
+            
+            if ((scroll < thresh) && !isDown) {
+                self.week -= 1;
+                self.prependWeek(self.week);
+                self.removeWeek(self.week + WEEK_RANGE + 1);
+            }
+            else if (isDown && ((scroll + elHeight) > (elScrollHeight - thresh))) {
+                self.week += 1;
+                self.appendWeek(self.week + WEEK_RANGE);
+                self.removeWeek(self.week - 1);
+            }
+            self.oldScroll = self.$el.scrollTop();
+		}, 20),
+
+		removeWeek: function (w) {
+			var $w = this.$week(w),
+				$n = $w.next(),
+				$p = $w.prev();
+
+			if($n.is('.month')) {
+				$n.remove();
+			}
+			if($p.is('.month')) {
+				$p.remove();
+			}
+			$w.remove();
+		},
+
+		getWeekHtml: function (w) {
+			var self = this,
+				firstDayOfWeek = moment().week(w).day(0),
+				days = [],
+				html = '',
+				dayRenderData;
+
+			for (var i =0; i< 7; i++) {
+				days.push(firstDayOfWeek.clone().add(i, 'days'))
+			}
+			dayRenderData = days.map(function (d) {
+				return {
+					Num: d.date()
+				};
+			});
+
+			if ((days[0].month() !== days[6].month()) || (days[0].date() === 1)) {
+                html += '<div class="month" data-month="' + days[6].month() + '">' + days[6].format('MMMM YYYY') + '</div>';
+            }
+            html += Mustache.render(self.weekTemplate, {
+                Days: dayRenderData,
+                Week: w
+            });
+            return html;
+		},
+
+		appendWeek: function (w) {
+			this.$el.append(this.getWeekHtml(w));
+		},
+
+		prependWeek: function (w) {
+			this.$el.prepend(this.getWeekHtml(w));
+		},
+
+		$week: function (w) {
+			return this.$('[data-week="' + w + '"]');
+		},
+
+		$month: function (m) {
+			return this.$('[data-month="' + m + '"]');
+		},
+
+		renderInitial: function () {
+			var self = this;
+			for (var i = 0; i < WEEK_RANGE; i++) {
+				self.appendWeek(self.week + i);
+			}
+
+			self.weekHeight = self.$week(self.week).height();
+			self.$el.scrollTop(self.$month(self.firstDayOfMonth.month()).position().top);
+			self.oldScroll = self.$el.scrollTop();
+		},
+
+		initialize: function (o) {
+			var self = this;
+			self.currentDay = moment();
+			self.firstDayOfMonth = self.currentDay.clone().date(1);
+			self.firstWeekOfMonth = self.firstDayOfMonth.week();
+			self.week = self.firstWeekOfMonth - 2;
+			self.renderInitial();
+
+		}
+	});
+
+	global.monthView2 = monthView;
+})(app);
+
+(function (global) {
     var cal = $('#calendar');
-    var View = new global.monthView({
+    // var View = new global.monthView({
+    //     el: cal
+    // });
+	var View = new global.monthView2({
         el: cal
     });
 })(app);
