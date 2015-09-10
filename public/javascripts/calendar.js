@@ -123,11 +123,13 @@
                 self.week -= 1;
                 self.prependWeek(self.week);
                 self.removeWeek(self.week + WEEK_RANGE + 1);
+                self.$el.scrollTop(scroll + self.weekHeight);
             }
             else if (isDown && ((scroll + elHeight) > (elScrollHeight - thresh))) {
                 self.week += 1;
                 self.appendWeek(self.week + WEEK_RANGE);
                 self.removeWeek(self.week - 1);
+                self.$el.scrollTop(scroll - self.weekHeight);
             }
             self.oldScroll = self.$el.scrollTop();
 		}, 20),
