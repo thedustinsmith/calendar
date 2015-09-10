@@ -100,7 +100,13 @@
 })(app);
 
 (function (global) {
-	var WEEK_RANGE = 8;
+	var WEEK_RANGE = 8,
+        today = moment();
+    function isToday(m) {
+        return m.year() === today.year()
+            && m.month() === today.month()
+            && m.date() === today.date();
+    }
 	var monthView = Backbone.View.extend({
 
         template: $('#month-template').html(),
@@ -109,6 +115,12 @@
 		events: {
 			'scroll': 'throttledScroll'
 		},
+
+        updateCurrentMonth: _.throttle(function() {
+            var m = this.getCurrentMonth();
+            this.$('[data-day-month!="' + m + '"].current-month').removeClass('current-month');
+            this.$('[data-day-month="' + m + '"]').addClass('current-month');
+        }, 2000),
 
 		throttledScroll: _.throttle(function (ev) {
 			var self = this,
@@ -132,7 +144,16 @@
                 self.$el.scrollTop(scroll - self.weekHeight);
             }
             self.oldScroll = self.$el.scrollTop();
+            self.updateCurrentMonth();
 		}, 20),
+
+        getCurrentMonth: function () {
+            var self = this,
+                months = self.$('[data-day-month]').map(function (ix, d) { return $(d).data('day-month'); }).toArray(),
+                monthGrouped = _.sortBy(_.groupBy(months),function (v) { return -1 * v.length; })[0][0];
+            console.log(monthGrouped);
+            return parseInt(monthGrouped, 10);
+        },
 
 		removeWeek: function (w) {
 			var $w = this.$week(w),
@@ -160,7 +181,9 @@
 			}
 			dayRenderData = days.map(function (d) {
 				return {
-					Num: d.date()
+					Num: d.date(),
+                    Month: d.month(),
+                    IsToday: isToday(d)
 				};
 			});
 
@@ -208,7 +231,7 @@
 			self.firstWeekOfMonth = self.firstDayOfMonth.week();
 			self.week = self.firstWeekOfMonth - 2;
 			self.renderInitial();
-
+            self.getCurrentMonth();
 		}
 	});
 

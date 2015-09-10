@@ -9,9 +9,9 @@
 
 {% block scripts %}
   <script type="text/template" id="week-template">
-    <div class="week" data-week="{{Week}}">
+    <div class="week" data-week="{{Week}}" data-week-month="{{Month}}">
     {{#Days}}
-      <div class="day">
+      <div class="day {{#IsToday}}today{{/IsToday}}" data-day-month="{{Month}}">
       <span class="day-num">{{Num}}</span>
       </div>
     {{/Days}}
