@@ -1,7 +1,10 @@
 {% extends '../layout.html' %}
 
 {% block content %}
-
+<div id="actions">
+  <button class="fa fa-plus btn-circle"></button>
+</div>
+<div class="calendar-wrapper">
   <div id="calendar">
     <div class="cal-header">
       <div class="cal-month"></div>
@@ -18,6 +21,7 @@
     <div class="cal-body">
     </div>
   </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -37,4 +41,5 @@
   	app.models = {};
   </script>
   <script src="javascripts/calendar.js"></script>
+  <script src="javascripts/sidebar.js"></script>
 {% endblock %}

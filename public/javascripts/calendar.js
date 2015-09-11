@@ -121,7 +121,7 @@
             this.$('[data-day-month!="' + m.month() + '"].current-month').removeClass('current-month');
             this.$('[data-day-month="' + m.month() + '"]').addClass('current-month');
             this.setMonthHeader(m)
-        }, 2000),
+        }, 1500),
 
 		throttledScroll: _.throttle(function (ev) {
 			var self = this,
