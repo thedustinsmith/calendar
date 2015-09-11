@@ -1,103 +1,103 @@
-(function (global) {
-    var monthView = Backbone.View.extend({
-        template: $('#month-template').html(),
-        weekTemplate: $('#week-template').html(),
+// (function (global) {
+//     var monthView = Backbone.View.extend({
+//         template: $('#month-template').html(),
+//         weekTemplate: $('#week-template').html(),
         
-        renderWeek: function (w, pre) {
-            log('rendering', w);
-            var day = moment().week(w).day(0), //first day of week
-                ix = 0,
-                days = [],
-                self = this,
-                thisDay = day,
-                renderDays,
-                html = '',
-                scrollSave;
-            while (ix < 7) {
-                days.push(moment(day));
-                day.add(1, 'days');
-                ix++;
-            }
+//         renderWeek: function (w, pre) {
+//             log('rendering', w);
+//             var day = moment().week(w).day(0), //first day of week
+//                 ix = 0,
+//                 days = [],
+//                 self = this,
+//                 thisDay = day,
+//                 renderDays,
+//                 html = '',
+//                 scrollSave;
+//             while (ix < 7) {
+//                 days.push(moment(day));
+//                 day.add(1, 'days');
+//                 ix++;
+//             }
             
-            renderDays = days.map(function (d) {
-                return {
-                    Num: d.date()
-                };
-            });
+//             renderDays = days.map(function (d) {
+//                 return {
+//                     Num: d.date()
+//                 };
+//             });
             
-            if ((days[0].month() !== days[6].month()) || (days[0].date() === 1)) {
-                html += '<div class="month" data-month="' + days[0].month() + '">' + days[6].format('MMMM YYYY') + '</div>';
-            }
-            html += Mustache.render(self.weekTemplate, {
-                Days: renderDays,
-                Week: w
-            });
+//             if ((days[0].month() !== days[6].month()) || (days[0].date() === 1)) {
+//                 html += '<div class="month" data-month="' + days[0].month() + '">' + days[6].format('MMMM YYYY') + '</div>';
+//             }
+//             html += Mustache.render(self.weekTemplate, {
+//                 Days: renderDays,
+//                 Week: w
+//             });
             
-            scrollSave = self.$el.scrollTop();
-            if (pre) {
-                self.$el.prepend(html);
-            }
-            else {
-                self.$el.append(html);
-            }
-            self.$el.scrollTop(scrollSave);
-        }, 
+//             scrollSave = self.$el.scrollTop();
+//             if (pre) {
+//                 self.$el.prepend(html);
+//             }
+//             else {
+//                 self.$el.append(html);
+//             }
+//             self.$el.scrollTop(scrollSave);
+//         }, 
         
-        renderInitial: function () {
-            var firstWeekOfMonth = this.firstDayOfMonth.week(),
-                firstMonth = this.firstDayOfMonth.month(),
-                firstWeek = firstWeekOfMonth - 2,
-                weekRange = 10,
-                lastWeek = firstWeek + weekRange,
-                self = this,
-                monthEl,
-                weekEl;
+//         renderInitial: function () {
+//             var firstWeekOfMonth = this.firstDayOfMonth.week(),
+//                 firstMonth = this.firstDayOfMonth.month(),
+//                 firstWeek = firstWeekOfMonth - 2,
+//                 weekRange = 10,
+//                 lastWeek = firstWeek + weekRange,
+//                 self = this,
+//                 monthEl,
+//                 weekEl;
             
-            if (self.hasBeenRendered) {
-                throw 'Trying to renderInitial twice';
-            }
-            self.hasBeenRendered = true;
+//             if (self.hasBeenRendered) {
+//                 throw 'Trying to renderInitial twice';
+//             }
+//             self.hasBeenRendered = true;
             
-            for (var i = firstWeek; i < lastWeek; i++) {
-                self.renderWeek(i);
-            }
+//             for (var i = firstWeek; i < lastWeek; i++) {
+//                 self.renderWeek(i);
+//             }
             
-            monthEl = self.$('.month[data-month="' + firstMonth + '"]');
-            weekEl = self.$('.week:first');
-            self.weekHeight = weekEl.height();
-            self.firstWeek = firstWeek;
-            self.lastWeek = firstWeek + weekRange;
-            self.$el.scrollTop(parseInt(monthEl.position().top, 10));
-        },
+//             monthEl = self.$('.month[data-month="' + firstMonth + '"]');
+//             weekEl = self.$('.week:first');
+//             self.weekHeight = weekEl.height();
+//             self.firstWeek = firstWeek;
+//             self.lastWeek = firstWeek + weekRange;
+//             self.$el.scrollTop(parseInt(monthEl.position().top, 10));
+//         },
         
-        onScroll: function () {
-            var scroll = this.$el.scrollTop(),
-                self = this,
-                thresh = (this.weekHeight * 2);
+//         onScroll: function () {
+//             var scroll = this.$el.scrollTop(),
+//                 self = this,
+//                 thresh = (this.weekHeight * 2);
             
-            if (scroll < thresh) {
-                self.firstWeek -= 1;
-                self.renderWeek(self.firstWeek, true);
-            }
-            else if ((scroll + self.$el.height()) > (self.$el[0].scrollHeight - thresh)) {
-                self.lastWeek += 1;
-                self.renderWeek(self.lastWeek);
-            }
-        },
+//             if (scroll < thresh) {
+//                 self.firstWeek -= 1;
+//                 self.renderWeek(self.firstWeek, true);
+//             }
+//             else if ((scroll + self.$el.height()) > (self.$el[0].scrollHeight - thresh)) {
+//                 self.lastWeek += 1;
+//                 self.renderWeek(self.lastWeek);
+//             }
+//         },
         
-        initialize: function (o) {
-            this.currentDay = moment();
-            this.firstDayOfMonth = this.currentDay.clone().date(1);
-            this.week = this.currentDay.clone().week();
+//         initialize: function (o) {
+//             this.currentDay = moment();
+//             this.firstDayOfMonth = this.currentDay.clone().date(1);
+//             this.week = this.currentDay.clone().week();
             
-            this.renderInitial();
-            this.$el.on('scroll', _.throttle(_.bind(this.onScroll, this), 25));
-        }
+//             this.renderInitial();
+//             this.$el.on('scroll', _.throttle(_.bind(this.onScroll, this), 25));
+//         }
     
-    });
+//     });
     
-    global.monthView = monthView;
-})(app);
+//     global.monthView = monthView;
+//})(app);
 
 (function (global) {
 	var WEEK_RANGE = 8,
@@ -118,8 +118,9 @@
 
         updateCurrentMonth: _.throttle(function() {
             var m = this.getCurrentMonth();
-            this.$('[data-day-month!="' + m + '"].current-month').removeClass('current-month');
-            this.$('[data-day-month="' + m + '"]').addClass('current-month');
+            this.$('[data-day-month!="' + m.month() + '"].current-month').removeClass('current-month');
+            this.$('[data-day-month="' + m.month() + '"]').addClass('current-month');
+            this.setMonthHeader(m)
         }, 2000),
 
 		throttledScroll: _.throttle(function (ev) {
@@ -151,8 +152,10 @@
             var self = this,
                 months = self.$('[data-day-month]').map(function (ix, d) { return $(d).data('day-month'); }).toArray(),
                 monthGrouped = _.sortBy(_.groupBy(months),function (v) { return -1 * v.length; })[0][0];
-            console.log(monthGrouped);
-            return parseInt(monthGrouped, 10);
+
+            var m = parseInt(monthGrouped, 10),
+                month = self.today.week(self.week).month(m);
+            return month;
         },
 
 		removeWeek: function (w) {
@@ -187,9 +190,6 @@
 				};
 			});
 
-			if ((days[0].month() !== days[6].month()) || (days[0].date() === 1)) {
-                html += '<div class="month" data-month="' + days[6].month() + '">' + days[6].format('MMMM YYYY') + '</div>';
-            }
             html += Mustache.render(self.weekTemplate, {
                 Days: dayRenderData,
                 Week: w
@@ -198,40 +198,46 @@
 		},
 
 		appendWeek: function (w) {
-			this.$el.append(this.getWeekHtml(w));
+			this.$calBody.append(this.getWeekHtml(w));
 		},
 
 		prependWeek: function (w) {
-			this.$el.prepend(this.getWeekHtml(w));
+			this.$calBody.prepend(this.getWeekHtml(w));
 		},
 
 		$week: function (w) {
 			return this.$('[data-week="' + w + '"]');
 		},
 
-		$month: function (m) {
-			return this.$('[data-month="' + m + '"]');
-		},
+		// $month: function (m) {
+		// 	return this.$('[data-month="' + m + '"]');
+		// },
+
+        setMonthHeader: function (m) {
+            this.$calMonth.html(m.format('MMMM YYYY'));
+        },
 
 		renderInitial: function () {
 			var self = this;
+            self.$calMonth = self.$('.cal-header .cal-month');
 			for (var i = 0; i < WEEK_RANGE; i++) {
 				self.appendWeek(self.week + i);
 			}
 
 			self.weekHeight = self.$week(self.week).height();
-			self.$el.scrollTop(self.$month(self.firstDayOfMonth.month()).position().top);
+			self.$el.scrollTop(self.$week(self.firstDayOfMonth.week()).position().top);
 			self.oldScroll = self.$el.scrollTop();
 		},
 
 		initialize: function (o) {
 			var self = this;
-			self.currentDay = moment();
-			self.firstDayOfMonth = self.currentDay.clone().date(1);
+            self.$calBody = self.$('.cal-body');
+			self.today = moment();
+			self.firstDayOfMonth = self.today.clone().date(1);
 			self.firstWeekOfMonth = self.firstDayOfMonth.week();
 			self.week = self.firstWeekOfMonth - 2;
 			self.renderInitial();
-            self.getCurrentMonth();
+            self.updateCurrentMonth();
 		}
 	});
 
