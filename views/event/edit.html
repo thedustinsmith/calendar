@@ -1,0 +1,21 @@
+{% extends '../layout.html' %}
+
+{% block content %}
+<div class="event-edit-wrapper">
+	<form>
+		<div class="control">
+			<label>Name</label>
+			<input type="text" name="Name" placeholder="Event Name" />
+		</div>
+
+		<div class="control">
+			<label>Date</label>
+			<input type="date" name="Date" placeholder="" />
+		</div>
+
+		<div class="control">
+			<button type="submit">Add Event</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

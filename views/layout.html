@@ -7,12 +7,12 @@
   <title>{% block title %}My Site{% endblock %}</title>
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600" rel="stylesheet" type="text/css">
-  <link href="font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
   {% block head %}
   <link rel="stylesheet" href="/stylesheets/style.css">
   {% endblock %}
 </head>
-<body>
+<body class="{= bodyClass =}">
   {% block content %}{% endblock %}
 
   <script src="/jquery/dist/jquery.js"></script>

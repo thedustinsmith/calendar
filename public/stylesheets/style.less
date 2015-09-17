@@ -6,6 +6,28 @@
 body {
   font: 14px "Open Sans", sans-serif;
 }
+input,
+button,
+textarea,
+select,
+option {
+	font-family: 'Open Sans', sans-serif;
+}
+
+input,
+textarea {
+	padding: 5px;
+	font-size: 1em;
+	color: #555;
+
+	&:focus {
+		outline: 0;
+	}
+}
+
+button {
+	cursor: pointer;
+}
 
 a {
   color: #00B7FF;
@@ -13,3 +35,4 @@ a {
 
 @import "mixins.less";
 @import "calendar.less";
+@import "editor.less";
